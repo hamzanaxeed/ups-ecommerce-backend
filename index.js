@@ -1,30 +1,38 @@
-import dotenv from "dotenv";
-
-const PORT = process.env.PORT || 4000;
+const dotenv = require("dotenv");
 dotenv.config();
 
 const express = require("express");
-
 const cors = require("cors");
+
+const authRoutes = require("./routes/auth.js");
+
 const app = express();
+const PORT = process.env.PORT || 4000;
 
-// enable cors
-app.use(cors());
+// Middleware
+app.use(express.json());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 
-// define root route
+// Routes
 app.get("/", (req, res) => {
   res.send("Hello from UPS Ecommerce Backend 🚀");
 });
 
-app.listen(PORT, () => {
-  console.log(`UPS Ecommerce Backend is running on port ${PORT} 🚀`);
-});
+app.use("/api/auth", authRoutes);
 
-// Sample products route
 app.get("/products", (req, res) => {
   res.json([
     { id: 1, name: "Product 1", price: 100 },
     { id: 2, name: "Product 2", price: 200 },
     { id: 3, name: "Product 3", price: 300 },
   ]);
+});
+
+app.listen(PORT, () => {
+  console.log(`UPS Ecommerce Backend is running on port ${PORT} 🚀`);
 });
