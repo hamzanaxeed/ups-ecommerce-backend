@@ -28,4 +28,22 @@ async function getProductById(productId) {
   return data;
 }
 
-module.exports = { getAllProducts, getProductById };
+async function addProduct({ name, price, description, category_id }) {
+  // Calls a Supabase stored procedure named `add_product` which
+  // expects parameters: p_name, p_price, p_description, p_category_id
+  // and returns the created product.
+  const { data, error } = await supabase.rpc("add_product", {
+    p_name: name,
+    p_price: price,
+    p_description: description,
+    p_category_id: category_id,
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+module.exports = { getAllProducts, getProductById, addProduct };

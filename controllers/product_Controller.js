@@ -1,4 +1,4 @@
-const { getAllProducts, getProductById } = require("../models/product_Model");
+const { getAllProducts, getProductById, addProduct } = require("../models/product_Model");
 
 async function fetchProducts(req, res) {
   try {
@@ -37,4 +37,28 @@ async function fetchProductById(req, res) {
   }
 }
 
-module.exports = { fetchProducts, fetchProductById };
+async function createProduct(req, res) {
+  try {
+    const { name, price, description, category_id } = req.body;
+
+    if (!name || !price) {
+      return res.status(400).json({ error: "Name and price are required" });
+    }
+
+    const product = await addProduct({
+      name,
+      price,
+      description: description || null,
+      category_id: category_id || null,
+    });
+
+    if (!product) return res.status(400).json({ error: "Failed to create product" });
+
+    return res.status(201).json({ message: "Product created", product });
+  } catch (err) {
+    console.error("Error creating product:", err.message || err);
+    return res.status(500).json({ error: "Failed to create product" });
+  }
+}
+
+module.exports = { fetchProducts, fetchProductById, createProduct };
