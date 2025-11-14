@@ -1,4 +1,4 @@
-const { getAllProducts, getProductById, addProduct } = require("../models/product_Model");
+const { getAllProducts, getProductById, addProduct, updateProduct, deleteProduct } = require("../models/product_Model");
 
 async function fetchProducts(req, res) {
   try {
@@ -61,4 +61,46 @@ async function createProduct(req, res) {
   }
 }
 
-module.exports = { fetchProducts, fetchProductById, createProduct };
+async function modifyProduct(req, res) {
+  try {
+    const productId = req.params.id;
+    const { name, price, description, category_id } = req.body;
+
+    if (!productId) return res.status(400).json({ error: "Product id required" });
+    if (!name || !price) return res.status(400).json({ error: "Name and price are required" });
+
+    const product = await updateProduct({
+      product_id: productId,
+      name,
+      price,
+      description: description || null,
+      category_id: category_id || null,
+    });
+
+    if (!product) return res.status(404).json({ error: "Product not found" });
+
+    return res.json({ message: "Product updated", product });
+  } catch (err) {
+    console.error("Error updating product:", err.message || err);
+    return res.status(500).json({ error: "Failed to update product" });
+  }
+}
+
+async function removeProduct(req, res) {
+  try {
+    const productId = req.params.id;
+
+    if (!productId) return res.status(400).json({ error: "Product id required" });
+
+    const result = await deleteProduct(productId);
+
+    if (!result) return res.status(404).json({ error: "Product not found" });
+
+    return res.json({ message: "Product deleted" });
+  } catch (err) {
+    console.error("Error deleting product:", err.message || err);
+    return res.status(500).json({ error: "Failed to delete product" });
+  }
+}
+
+module.exports = { fetchProducts, fetchProductById, createProduct, modifyProduct, removeProduct };

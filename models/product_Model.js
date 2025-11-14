@@ -46,4 +46,24 @@ async function addProduct({ name, price, description, category_id }) {
   return data;
 }
 
-module.exports = { getAllProducts, getProductById, addProduct };
+async function updateProduct({ product_id, name, price, description, category_id }) {
+  const { data, error } = await supabase.rpc("update_product", {
+    p_product_id: product_id,
+    p_name: name,
+    p_price: price,
+    p_description: description,
+    p_category_id: category_id,
+  });
+  if (error) throw error;
+  return data;
+}
+
+async function deleteProduct(product_id) {
+  const { data, error } = await supabase.rpc("delete_product", {
+    p_product_id: product_id,
+  });
+  if (error) throw error;
+  return data;
+}
+
+module.exports = { getAllProducts, getProductById, addProduct, updateProduct, deleteProduct };
