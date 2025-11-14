@@ -1,3 +1,6 @@
+"scripts": {
+  "start": "node index.js"
+}
 {
   "name": "ups-ecommerce-backend",
   "version": "1.0.0",
