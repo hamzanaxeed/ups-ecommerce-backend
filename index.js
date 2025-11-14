@@ -1,12 +1,17 @@
+
 const dotenv = require("dotenv");
+
 dotenv.config();
 
 const express = require("express");
 const cors = require("cors");
 
 const authRoutes = require("./routes/auth.js");
+const productRoutes = require("./routes/product.js");
 
 const app = express();
+app.use(express.json());
+
 const PORT = process.env.PORT || 4000;
 
 // Middleware
@@ -24,6 +29,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
 
 app.get("/products", (req, res) => {
   res.json([
