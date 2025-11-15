@@ -11,6 +11,8 @@ const productRoutes = require("./routes/product.js");
 const categoryRoutes = require("./routes/category.js");
 const serviceRoutes = require("./routes/service.js");
 const orderRoutes = require("./routes/order.js");
+const paymentRoutes = require("./routes/payment.js");
+const feedbackRoutes = require("./routes/feedback.js");
 
 const app = express();
 app.use(express.json());
@@ -36,6 +38,8 @@ app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/payments", paymentRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 app.get("/products", (req, res) => {
   res.json([
