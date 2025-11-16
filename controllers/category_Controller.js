@@ -43,9 +43,9 @@ async function createCategory(req, res) {
     }
 
     const category = await addCategory({
-      name,
       description: description || null,
       image: image || null,
+       name,
     });
 
     if (!category) return res.status(400).json({ error: "Failed to create category" });
