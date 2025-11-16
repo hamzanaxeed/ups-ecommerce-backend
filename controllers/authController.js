@@ -20,7 +20,7 @@ async function registerUser(req, res) {
     if (!email || !password) return res.status(400).json({ message: "Email and password required" });
 
     const existing = await findByIdentifier(email);
-    if (existing) return res.status(400).json({ message: "User already exists" });
+    if (existing) return res.status(401).json({ message: "User already exists" });
 
     const salt = await bcrypt.genSalt(10);
     const password_hash = await bcrypt.hash(password, salt);
