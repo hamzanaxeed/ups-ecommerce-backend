@@ -14,21 +14,23 @@ async function getCategoryById(categoryId) {
   return data; // JSON object
 }
 
-async function addCategory({ name, description }) {
+async function addCategory({ name, description, image }) {
   const { data, error } = await supabase.rpc("add_category", {
     p_name: name,
     p_description: description,
+    p_image: image,
   });
 
   if (error) throw error;
   return data; // Returns JSON object of new category
 }
 
-async function updateCategory({ category_id, name, description }) {
+async function updateCategory({ category_id, name, description, image }) {
   const { data, error } = await supabase.rpc("update_category", {
     p_category_id: category_id,
     p_name: name,
     p_description: description,
+    p_image: image,
   });
   if (error) throw error;
   return data;

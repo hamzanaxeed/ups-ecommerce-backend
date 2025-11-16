@@ -39,7 +39,7 @@ async function fetchProductById(req, res) {
 
 async function createProduct(req, res) {
   try {
-    const { name, price, description, category_id } = req.body;
+    const { name, price, description, category_id, image } = req.body;
 
     if (!name || !price) {
       return res.status(400).json({ error: "Name and price are required" });
@@ -50,6 +50,7 @@ async function createProduct(req, res) {
       price,
       description: description || null,
       category_id: category_id || null,
+      image: image || null,
     });
 
     if (!product) return res.status(400).json({ error: "Failed to create product" });
@@ -64,7 +65,7 @@ async function createProduct(req, res) {
 async function modifyProduct(req, res) {
   try {
     const productId = req.params.id;
-    const { name, price, description, category_id } = req.body;
+    const { name, price, description, category_id, image } = req.body;
 
     if (!productId) return res.status(400).json({ error: "Product id required" });
     if (!name || !price) return res.status(400).json({ error: "Name and price are required" });
@@ -75,6 +76,7 @@ async function modifyProduct(req, res) {
       price,
       description: description || null,
       category_id: category_id || null,
+      image: image || null,
     });
 
     if (!product) return res.status(404).json({ error: "Product not found" });

@@ -4,7 +4,7 @@ const { findByIdentifier, createUser, setRefreshToken, getUserById } = require("
 
 const ACCESS_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_TOKEN_SECRET;
-const ACCESS_EXP = process.env.ACCESS_TOKEN_EXPIRY || "15m";
+const ACCESS_EXP = process.env.ACCESS_TOKEN_EXPIRY || "60m";
 const REFRESH_EXP = process.env.REFRESH_TOKEN_EXPIRY || "7d";
 
 function createAccessToken(payload) {

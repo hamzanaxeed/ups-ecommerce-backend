@@ -28,15 +28,16 @@ async function getProductById(productId) {
   return data;
 }
 
-async function addProduct({ name, price, description, category_id }) {
+async function addProduct({ name, price, description, category_id, image }) {
   // Calls a Supabase stored procedure named `add_product` which
-  // expects parameters: p_name, p_price, p_description, p_category_id
+  // expects parameters: p_name, p_price, p_description, p_category_id, p_image
   // and returns the created product.
   const { data, error } = await supabase.rpc("add_product", {
     p_name: name,
     p_price: price,
     p_description: description,
     p_category_id: category_id,
+    p_image: image,
   });
 
   if (error) {
@@ -46,13 +47,14 @@ async function addProduct({ name, price, description, category_id }) {
   return data;
 }
 
-async function updateProduct({ product_id, name, price, description, category_id }) {
+async function updateProduct({ product_id, name, price, description, category_id, image }) {
   const { data, error } = await supabase.rpc("update_product", {
     p_product_id: product_id,
     p_name: name,
     p_price: price,
     p_description: description,
     p_category_id: category_id,
+    p_image: image,
   });
   if (error) throw error;
   return data;

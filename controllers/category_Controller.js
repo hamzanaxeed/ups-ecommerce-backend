@@ -36,7 +36,7 @@ async function fetchCategoryById(req, res) {
 
 async function createCategory(req, res) {
   try {
-    const { name, description } = req.body;
+    const { name, description, image } = req.body;
 
     if (!name) {
       return res.status(400).json({ error: "Category name is required" });
@@ -45,6 +45,7 @@ async function createCategory(req, res) {
     const category = await addCategory({
       name,
       description: description || null,
+      image: image || null,
     });
 
     if (!category) return res.status(400).json({ error: "Failed to create category" });
@@ -59,7 +60,7 @@ async function createCategory(req, res) {
 async function modifyCategory(req, res) {
   try {
     const categoryId = req.params.id;
-    const { name, description } = req.body;
+    const { name, description, image } = req.body;
 
     if (!categoryId) return res.status(400).json({ error: "Category id required" });
     if (!name) return res.status(400).json({ error: "Category name is required" });
@@ -68,6 +69,7 @@ async function modifyCategory(req, res) {
       category_id: categoryId,
       name,
       description: description || null,
+      image: image || null,
     });
 
     if (!category) return res.status(404).json({ error: "Category not found" });
