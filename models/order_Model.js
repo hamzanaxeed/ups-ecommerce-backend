@@ -31,7 +31,6 @@ async function createFullOrder(payload) {
   const { data, error } = await supabase.rpc("create_full_order", {
     p_customer_id: payload.customer_id,
     p_items: payload.items,
-    p_delivery_expected_at: payload.delivery_expected_at,
   });
 
   if (error) throw error;

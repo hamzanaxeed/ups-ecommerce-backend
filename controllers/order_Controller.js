@@ -75,7 +75,7 @@ async function fetchFullOrderDetail(req, res) {
 // ================================
 async function createOrder(req, res) {
   try {
-    const { customer_id, items, delivery_expected_at } = req.body;
+    const { customer_id, items } = req.body;
 
     // Validation
     if (!customer_id || !items || !Array.isArray(items) || items.length === 0) {
@@ -87,7 +87,6 @@ async function createOrder(req, res) {
     const payload = {
       customer_id,
       items,
-      delivery_expected_at: delivery_expected_at || null,
     };
 
     const order = await createFullOrder(payload);

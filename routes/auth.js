@@ -46,6 +46,7 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Email/username and password required" });
 
     const user = await findByIdentifier(identifier);
+    console.log('HI')
     console.log(user);
     if (!user) return res.status(400).json({ error: "Invalid credentials" });
 
@@ -53,8 +54,8 @@ router.post("/login", async (req, res) => {
     if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
 
     // Generate JWT
-    const token = jwt.sign({ user_id: user.id, email: user.email, username: user.username, role: user.role }, JWT_SECRET, { expiresIn: "8h" });
-    res.json({ token, user: { user_id: user.id, email: user.email, username: user.username, role: user.role } });
+    const token = jwt.sign({ UserId: user.user_Id, email: user.email, username: user.username, role: user.role }, JWT_SECRET, { expiresIn: "8h" });
+    res.json({ token, user: { user_id: user.user_Id, email: user.email, username: user.username, role: user.role } });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Login failed" });
