@@ -9,6 +9,8 @@ const {
   updateStatus,
   removeOrder,
   fetchOrderSummary,
+  completeOrder,
+  confirmOrder,
 } = require("../controllers/order_Controller");
 
 // GET /api/orders -> returns all orders (Admin)
@@ -31,6 +33,12 @@ router.get("/:id/detail", fetchFullOrderDetail);
 
 // PUT /api/orders/:id/status -> updates order status
 router.put("/:id/status", updateStatus);
+
+// PUT /api/orders/:id/complete -> marks order as completed
+router.put("/:id/complete", completeOrder);
+
+// PUT /api/orders/:id/confirm -> marks order as confirmed
+router.put("/:id/confirm", confirmOrder);
 
 // DELETE /api/orders/:id -> deletes order
 router.delete("/:id", removeOrder);

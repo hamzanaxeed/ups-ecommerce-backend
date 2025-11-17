@@ -75,6 +75,32 @@ async function getOrderSummaryReport() {
   return data;
 }
 
+// Mark order as completed
+async function markOrderCompleted(orderId) {
+  if (!orderId) throw new Error("Order ID is required");
+
+  const { data, error } = await supabase.rpc('mark_order_completed', {
+    p_order_id: orderId
+  });
+
+  if (error) throw error;
+
+  return data; // Returns JSON object: { order_id, status }
+}
+
+// Mark order as confirmed
+async function markOrderConfirmed(orderId) {
+  if (!orderId) throw new Error("Order ID is required");
+
+  const { data, error } = await supabase.rpc('mark_order_confirmed', {
+    p_order_id: orderId
+  });
+
+  if (error) throw error;
+
+  return data; // Returns JSON object: { order_id, status }
+}
+
 module.exports = {
   getAllOrders,
   getOrderById,
@@ -84,4 +110,6 @@ module.exports = {
   updateOrderStatus,
   deleteOrder,
   getOrderSummaryReport,
+  markOrderCompleted,
+  markOrderConfirmed,
 };

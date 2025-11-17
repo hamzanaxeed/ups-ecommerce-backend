@@ -7,6 +7,8 @@ const {
   updateOrderStatus,
   deleteOrder,
   getOrderSummaryReport,
+  markOrderCompleted,
+  markOrderConfirmed,
 } = require("../models/order_Model");
 
 // ================================
@@ -181,6 +183,46 @@ async function fetchOrderSummary(req, res) {
   }
 }
 
+// ================================
+// Mark order as completed
+// ================================
+async function completeOrder(req, res) {
+  try {
+    const orderId = req.params.id;
+
+    if (!orderId) return res.status(400).json({ error: "Order id required" });
+
+    const result = await markOrderCompleted(orderId);
+
+    if (!result) return res.status(404).json({ error: "Order not found" });
+
+    return res.json({ message: "Order marked as completed", order: result });
+  } catch (err) {
+    console.error("Error marking order as completed:", err.message || err);
+    return res.status(500).json({ error: "Failed to mark order as completed" });
+  }
+}
+
+// ================================
+// Mark order as confirmed
+// ================================
+async function confirmOrder(req, res) {
+  try {
+    const orderId = req.params.id;
+
+    if (!orderId) return res.status(400).json({ error: "Order id required" });
+
+    const result = await markOrderConfirmed(orderId);
+
+    if (!result) return res.status(404).json({ error: "Order not found" });
+
+    return res.json({ message: "Order marked as confirmed", order: result });
+  } catch (err) {
+    console.error("Error marking order as confirmed:", err.message || err);
+    return res.status(500).json({ error: "Failed to mark order as confirmed" });
+  }
+}
+
 module.exports = {
   fetchAllOrders,
   fetchOrderById,
@@ -190,4 +232,6 @@ module.exports = {
   updateStatus,
   removeOrder,
   fetchOrderSummary,
+  completeOrder,
+  confirmOrder,
 };
