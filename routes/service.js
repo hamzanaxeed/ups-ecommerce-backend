@@ -1,30 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const {
-  fetchAllServices,
-  fetchAvailableServices,
-  fetchServiceById,
-  addService,
-  updateService,
-  removeService,
-} = require("../controllers/service_Controller");
+const { fetchServices, fetchAvailableServices, createService, modifyService, removeService } = require("../controllers/service_Controller");
 
-// GET /api/services/all -> returns all services (Admin)
-router.get("/all", fetchAllServices);
+// GET /api/services -> list services
+router.get("/", fetchServices);
 
-// GET /api/services/available -> returns available services (Customer)
-router.get("/available", fetchAvailableServices);
+// POST /api/services -> create service
+router.post("/", createService);
 
-// POST /api/services -> creates a new service (Admin)
-router.post("/", addService);
+// PUT /api/services/:id -> update
+router.put("/:id", modifyService);
 
-// GET /api/services/:id -> returns a single service by id
-router.get("/:id", fetchServiceById);
-
-// PUT /api/services/:id -> updates a service (Admin)
-router.put("/:id", updateService);
-
-// DELETE /api/services/:id -> deletes a service (Admin)
+// DELETE /api/services/:id -> delete
 router.delete("/:id", removeService);
 
+router.get("/available", fetchAvailableServices);
+
 module.exports = router;
+

@@ -10,6 +10,7 @@ const authRoutes = require("./routes/auth.js");
 const productRoutes = require("./routes/product.js");
 const categoryRoutes = require("./routes/category.js");
 const serviceRoutes = require("./routes/service.js");
+const slotsRoutes = require("./routes/slots.js");
 const orderRoutes = require("./routes/order.js");
 const paymentRoutes = require("./routes/payment.js");
 const feedbackRoutes = require("./routes/feedback.js");
@@ -72,6 +73,7 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/feedback", feedbackRoutes);
+app.use("/api/slots", slotsRoutes);
 
 app.get("/products", (req, res) => {
   res.json([
