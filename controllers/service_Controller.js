@@ -14,7 +14,8 @@ async function fetchServices(req, res) {
 // Fetch available services only
 async function fetchAvailableServices(req, res) {
 	try {
-		const services = await getAvailableServices(true); // pass a flag to get only available services
+		const services = await getAvailableServices(true); 
+	
 		return res.json({ services });
 	} catch (err) {
 		console.error("Error fetching available services:", err.message || err);
