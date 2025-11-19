@@ -15,6 +15,7 @@ const orderRoutes = require("./routes/order.js");
 const paymentRoutes = require("./routes/payment.js");
 const feedbackRoutes = require("./routes/feedback.js");
 const favouriteRoutes = require("./routes/favourite.js");
+const addressRoutes = require("./routes/address.js");
 
 const app = express();
 
@@ -76,6 +77,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/slots", slotsRoutes);
 app.use("/api/favourites", favouriteRoutes);
+app.use("/api/addresses", addressRoutes);
 
 app.get("/products", (req, res) => {
   res.json([

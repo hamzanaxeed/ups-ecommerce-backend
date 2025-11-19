@@ -77,18 +77,19 @@ async function fetchFullOrderDetail(req, res) {
 // ================================
 async function createOrder(req, res) {
   try {
-    const { customer_id, items } = req.body;
+    const { customer_id, items ,delivery_Address} = req.body;
 
     // Validation
-    if (!customer_id || !items || !Array.isArray(items) || items.length === 0) {
+    if (!customer_id || !items || !Array.isArray(items) || items.length === 0||!delivery_Address) {
       return res.status(400).json({
-        error: "customer_id and items (non-empty array) are required",
+        error: "customer_id, items (non-empty array), and delivery_Address are required",
       });
     }
 
     const payload = {
       customer_id,
       items,
+      delivery_Address
     };
 
     const order = await createFullOrder(payload);
