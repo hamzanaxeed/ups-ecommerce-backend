@@ -20,7 +20,7 @@ async function getPaymentsByOrder(orderId) {
 async function createPayment(orderId, method, amount) {
   const { data, error } = await supabase.rpc("create_payment", {
     p_order_id: orderId,
-    p_payment_method: method,
+    p_method: method,
     p_amount: amount,
   });
   if (error) throw error;
