@@ -1,103 +1,72 @@
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { findByIdentifier, createUser, setRefreshToken, getUserById } = require("../models/userModel");
+const { findActiveUserByEmailAndRole, updatePasswordByEmail } = require("../models/auth_Model");
 
-const ACCESS_SECRET = process.env.ACCESS_TOKEN_SECRET;
-const REFRESH_SECRET = process.env.REFRESH_TOKEN_SECRET;
-const ACCESS_EXP = process.env.ACCESS_TOKEN_EXPIRY || "60m";
-const REFRESH_EXP = process.env.REFRESH_TOKEN_EXPIRY || "7d";
-
-function createAccessToken(payload) {
-  return jwt.sign(payload, ACCESS_SECRET, { expiresIn: ACCESS_EXP });
-}
-function createRefreshToken(payload) {
-  return jwt.sign(payload, REFRESH_SECRET, { expiresIn: REFRESH_EXP });
-}
-
-async function registerUser(req, res) {
+// Generic login helper
+async function loginByRole(email, password, role) {
   try {
-    const { email, username, password } = req.body;
-    if (!email || !password) return res.status(400).json({ message: "Email and password required" });
+    const user = await findActiveUserByEmailAndRole(email, role);
 
-    const existing = await findByIdentifier(email);
-    if (existing) return res.status(401).json({ message: "User already exists" });
+    if (!user) return { error: "User not found or inactive" };
 
-    const salt = await bcrypt.genSalt(10);
-    const password_hash = await bcrypt.hash(password, salt);
+    const validPassword = await bcrypt.compare(password, user.password_hash);
+    if (!validPassword) return { error: "Incorrect password" };
 
-    const user = await createUser({ email, username, password_hash });
-    return res.status(201).json({ message: "User created", user: { id: user.id, email: user.email } });
+    const { password_hash, ...userInfo } = user;
+    return { success: true, user: userInfo };
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Registration failed" });
+    console.error("Login error:", err.message || err);
+    return { error: "Login failed" };
   }
 }
 
-async function loginUser(req, res) {
+// Login handlers
+async function loginCustomer(req, res) {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ error: "Email and password required" });
+
+  const result = await loginByRole(email, password, "customer");
+  if (result.error) return res.status(400).json({ error: result.error });
+
+  return res.json(result);
+}
+
+async function loginTechnician(req, res) {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ error: "Email and password required" });
+
+  const result = await loginByRole(email, password, "technician");
+  if (result.error) return res.status(400).json({ error: result.error });
+
+  return res.json(result);
+}
+
+async function loginAdmin(req, res) {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ error: "Email and password required" });
+
+  const result = await loginByRole(email, password, "admin");
+  if (result.error) return res.status(400).json({ error: result.error });
+
+  return res.json(result);
+}
+
+// Reset password handler
+async function resetPassword(req, res) {
   try {
-    const { identifier, password } = req.body;
-    if (!identifier || !password) return res.status(400).json({ message: "Missing fields" });
+    const { email, new_password } = req.body;
+    if (!email || !new_password) return res.status(400).json({ error: "Email and new password required" });
 
-    const user = await findByIdentifier(identifier);
-    if (!user) return res.status(401).json({ message: "Invalid credentials" });
+    const saltRounds = 10;
+    const password_hash = await bcrypt.hash(new_password, saltRounds);
 
-    const valid = await bcrypt.compare(password, user.password_hash);
-    if (!valid) return res.status(401).json({ message: "Invalid credentials" });
+    const data = await updatePasswordByEmail(email, password_hash);
+    if (!data) return res.status(404).json({ error: "User not found or inactive" });
 
-    const payload = { userId: user.id, email: user.email, role: user.role || "user" };
-    const accessToken = createAccessToken(payload);
-    const refreshToken = createRefreshToken({ userId: user.id });
-
-    await setRefreshToken(user.id, refreshToken);
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    return res.json({ accessToken, user: { id: user.id, email: user.email, username: user.username } });
+    return res.json({ success: true, message: "Password reset successfully" });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Login failed" });
+    console.error("Reset password error:", err.message || err);
+    return res.status(500).json({ error: "Failed to reset password" });
   }
 }
 
-async function refreshToken(req, res) {
-  try {
-    const token = req.cookies?.refreshToken;
-    if (!token) return res.status(401).json({ accessToken: "" });
-
-    let payload;
-    try { payload = jwt.verify(token, REFRESH_SECRET); }
-    catch (e) { return res.status(403).json({ accessToken: "" }); }
-
-    const user = await getUserById(payload.userId);
-    if (!user || user.refresh_token !== token) return res.status(403).json({ accessToken: "" });
-
-    const newAccessToken = createAccessToken({ userId: user.id, email: user.email, role: user.role });
-    return res.json({ accessToken: newAccessToken });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ accessToken: "" });
-  }
-}
-
-async function logout(req, res) {
-  try {
-    const token = req.cookies?.refreshToken;
-    if (token) {
-      let payload = null;
-      try { payload = jwt.verify(token, REFRESH_SECRET); } catch (e) {}
-      if (payload) await setRefreshToken(payload.userId, null);
-    }
-    res.clearCookie("refreshToken");
-    return res.json({ ok: true });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ ok: false });
-  }
-}
-
-module.exports = { registerUser, loginUser, refreshToken, logout };
+module.exports = { loginCustomer, loginTechnician, loginAdmin, resetPassword };
