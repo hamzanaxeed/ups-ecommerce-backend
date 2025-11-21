@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { fetchAddresses, createAddressHandler, updateAddress, removeAddress } = require("../controllers/address_Controller");
+const { fetchAddresses, createAddressHandler, updateAddress, removeAddress, deactivateAddressHandler } = require("../controllers/address_Controller");
 
 // GET /api/addresses/:userId -> get all addresses for user
 router.get("/:userId", fetchAddresses);
@@ -12,6 +12,6 @@ router.post("/", createAddressHandler);
 router.put("/:addressId", updateAddress);
 
 // DELETE /api/addresses/:addressId -> delete address
-router.delete("/:addressId", removeAddress);
+router.delete("/:addressId", deactivateAddressHandler);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const { getAddresses, createAddress, editAddress, deleteAddress } = require("../models/address_Model");
+const { getAddresses, createAddress, editAddress, deleteAddress, deactivateAddress } = require("../models/address_Model");
 
 // Fetch all addresses for a user
 async function fetchAddresses(req, res) {
@@ -78,4 +78,25 @@ async function removeAddress(req, res) {
 	}
 }
 
-module.exports = { fetchAddresses, createAddressHandler, updateAddress, removeAddress };
+// Deactivate an address
+async function deactivateAddressHandler(req, res) {
+	try {
+		const { addressId } = req.params;
+
+		if (!addressId) {
+			return res.status(400).json({ error: "Address ID required" });
+		}
+
+		const result = await deactivateAddress(addressId);
+		if (result.error) {
+			return res.status(400).json({ error: result.error });
+		}
+
+		return res.json(result);
+	} catch (err) {
+		console.error("Error deactivating address:", err.message || err);
+		return res.status(400).json({ error: err.message || "Failed to deactivate address" });
+	}
+}
+
+module.exports = { fetchAddresses, createAddressHandler, updateAddress, removeAddress, deactivateAddressHandler };

@@ -47,4 +47,19 @@ async function deleteAddress(addressId) {
 	return data;
 }
 
-module.exports = { getAddresses, createAddress, editAddress, deleteAddress };
+// Deactivate an address
+async function deactivateAddress(address_id) {
+	try {
+		const { data, error } = await supabase.rpc("deactivate_address", {
+			p_address_id: address_id,
+		});
+		if (error) throw error;
+		if (data.error) return { error: data.message || data.error };
+		return { success: true, address: data };
+	} catch (err) {
+		console.error("Error deactivating address:", err.message || err);
+		return { error: "Failed to deactivate address" };
+	}
+}
+
+module.exports = { getAddresses, createAddress, editAddress, deleteAddress, deactivateAddress };
