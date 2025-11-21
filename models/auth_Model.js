@@ -27,4 +27,27 @@ async function updatePasswordByEmail(email, password_hash) {
   return data;
 }
 
-module.exports = { findActiveUserByEmailAndRole, updatePasswordByEmail };
+async function findUserByEmail(email) {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("email", email)
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+async function updateUserPassword(email, password_hash) {
+  const { data, error } = await supabase
+    .from("users")
+    .update({ password_hash })
+    .eq("email", email)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+module.exports = { findActiveUserByEmailAndRole, updatePasswordByEmail, findUserByEmail, updateUserPassword };

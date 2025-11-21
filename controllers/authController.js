@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { findActiveUserByEmailAndRole, updatePasswordByEmail } = require("../models/auth_Model");
+const { findActiveUserByEmailAndRole, updatePasswordByEmail, findUserByEmail, updateUserPassword } = require("../models/auth_Model");
 
 // Generic login helper
 async function loginByRole(email, password, role) {
@@ -69,4 +69,41 @@ async function resetPassword(req, res) {
   }
 }
 
-module.exports = { loginCustomer, loginTechnician, loginAdmin, resetPassword };
+// Change password handler
+async function changePassword(req, res) {
+  try {
+    const { email, oldPassword, newPassword } = req.body;
+
+    if (!email || !oldPassword || !newPassword) {
+      return res.status(400).json({ error: "Email, old password and new password are required" });
+    }
+
+    // Fetch user by email
+    const userData = await findUserByEmail(email);
+    if (!userData) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Verify old password
+    const isMatch = await bcrypt.compare(oldPassword, userData.password_hash);
+    if (!isMatch) {
+      return res.status(401).json({ error: "Old password is incorrect" });
+    }
+
+    // Hash new password
+    const newHash = await bcrypt.hash(newPassword, 10);
+
+    // Update password in Supabase
+    const updatedUser = await updateUserPassword(email, newHash);
+    if (!updatedUser) {
+      return res.status(500).json({ error: "Failed to update password" });
+    }
+
+    return res.json({ message: "Password changed successfully", user: updatedUser });
+  } catch (err) {
+    console.error("Error changing password:", err.message || err);
+    return res.status(500).json({ error: "Server error" });
+  }
+}
+
+module.exports = { loginCustomer, loginTechnician, loginAdmin, resetPassword, changePassword };
