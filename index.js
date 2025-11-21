@@ -18,6 +18,7 @@ const favouriteRoutes = require("./routes/favourite.js");
 const addressRoutes = require("./routes/address.js");
 const userRoutes = require("./routes/user.js");
 const resourcesRoutes = require("./routes/resources.js");
+const technicianRoutes = require("./routes/technician.js");
 
 const app = express();
 
@@ -82,6 +83,7 @@ app.use("/api/favourites", favouriteRoutes);
 app.use("/api/addresses", addressRoutes);
 app.use("/api/customer", userRoutes);
 app.use("/api/resources", resourcesRoutes);
+app.use("/api/technician", technicianRoutes);
 
 app.get("/products", (req, res) => {
   res.json([
