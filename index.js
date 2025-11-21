@@ -17,6 +17,7 @@ const feedbackRoutes = require("./routes/feedback.js");
 const favouriteRoutes = require("./routes/favourite.js");
 const addressRoutes = require("./routes/address.js");
 const userRoutes = require("./routes/user.js");
+const resourcesRoutes = require("./routes/resources.js");
 
 const app = express();
 
@@ -80,6 +81,7 @@ app.use("/api/slots", slotsRoutes);
 app.use("/api/favourites", favouriteRoutes);
 app.use("/api/addresses", addressRoutes);
 app.use("/api/customer", userRoutes);
+app.use("/api/resources", resourcesRoutes);
 
 app.get("/products", (req, res) => {
   res.json([
