@@ -1,17 +1,43 @@
+// src/routes/addressRoutes.js
 const express = require("express");
 const router = express.Router();
-const { fetchAddresses, createAddressHandler, updateAddress, removeAddress, deactivateAddressHandler } = require("../controllers/address_Controller");
 
-// GET /api/addresses/:userId -> get all addresses for user
-router.get("/:userId", fetchAddresses);
+const {
+    fetchAddresses,
+    createAddressHandler,
+    updateAddress,
+    removeAddress,
+    deactivateAddressHandler
+} = require("../controllers/addressController");
 
-// POST /api/addresses -> create new address
-router.post("/", createAddressHandler);
+const {
+    AddAddressRepository,
+    EditAddressRepository,
+    DeleteAddressRepository,
+    DeactivateAddressRepository,
+    GetAddressesRepository
+} = require("../repositories/addressOperations");
 
-// PUT /api/addresses/:addressId -> update address
-router.put("/:addressId", updateAddress);
+const AddressReadService = require("../services/addressReadService");
+const AddressWriteService = require("../services/addressWriteService");
+const AddressValidator = require("../validators/addressValidator");
 
-// DELETE /api/addresses/:addressId -> delete address
-router.delete("/:addressId", deactivateAddressHandler);
+// Repositories
+const getRepo = new GetAddressesRepository();
+const addRepo = new AddAddressRepository();
+const editRepo = new EditAddressRepository();
+const deleteRepo = new DeleteAddressRepository();
+const deactivateRepo = new DeactivateAddressRepository();
+
+// Services
+const readService = new AddressReadService(getRepo, AddressValidator);
+const writeService = new AddressWriteService({ addRepo, editRepo, deleteRepo, deactivateRepo }, AddressValidator);
+
+// Routes
+router.get("/:userId", (req, res) => fetchAddresses(req, res, readService));
+router.post("/", (req, res) => createAddressHandler(req, res, writeService));
+router.put("/:addressId", (req, res) => updateAddress(req, res, writeService));
+router.delete("/:addressId", (req, res) => removeAddress(req, res, writeService));
+router.patch("/deactivate/:addressId", (req, res) => deactivateAddressHandler(req, res, writeService));
 
 module.exports = router;
