@@ -1,15 +1,7 @@
-const bcrypt = require("bcrypt");
-const {
-	createCustomer,
-	editActiveCustomer,
-	deactivateCustomer,
-	getAllCustomers,
-	getAllActiveCustomers,
-	getActiveCustomer,
-} = require("../models/user_Model");
+const UserValidator = require("../validators/userValidator");
 
 // Create new customer
-async function registerCustomer(req, res) {
+async function registerCustomer(req, res, writeService) {
 	try {
 		const { name, email, username, password, phone_Number } = req.body;
 
@@ -17,19 +9,9 @@ async function registerCustomer(req, res) {
 			return res.status(400).json({ error: "All fields are required" });
 		}
 
-		// Hash password with bcrypt
-		const saltRounds = 10;
-		const password_hash = await bcrypt.hash(password, saltRounds);
-
-		const customer = await createCustomer({
-			name,
-			email,
-			username,
-			password_hash,
-			phone_Number,
-		});
-
-		return res.status(201).json({ message: "Customer created", customer });
+		UserValidator.validateUserData({ name, email, username, password, phone_Number });
+		const response = await writeService.create({ name, email, username, password, phone_Number });
+		return res.status(response.status).json({ message: "Customer created", ...response.data });
 	} catch (err) {
 		console.error("Error creating customer:", err.message || err);
 		return res.status(500).json({ error: err.message || "Failed to create customer" });
@@ -37,7 +19,7 @@ async function registerCustomer(req, res) {
 }
 
 // Edit active customer
-async function updateCustomer(req, res) {
+async function updateCustomer(req, res, writeService) {
 	try {
 		const { user_Id } = req.params;
 		const { name, email, username, phone_Number } = req.body;
@@ -46,15 +28,10 @@ async function updateCustomer(req, res) {
 			return res.status(400).json({ error: "User ID required" });
 		}
 
-		const updated = await editActiveCustomer({
-			user_Id,
-			name,
-			email,
-			username,
-			phone_Number,
-		});
-
-		return res.json({ message: "Customer updated", customer: updated });
+		UserValidator.validateUserId(user_Id);
+		UserValidator.validateUserData({ name, email, username, phone_Number }, { allowPassword: true });
+		const response = await writeService.update(user_Id, { name, email, username, phone_Number });
+		return res.status(response.status).json({ message: "Customer updated", ...response.data });
 	} catch (err) {
 		console.error("Error updating customer:", err.message || err);
 		return res.status(500).json({ error: err.message || "Failed to update customer" });
@@ -62,7 +39,7 @@ async function updateCustomer(req, res) {
 }
 
 // Deactivate customer
-async function deactivateCustomerHandler(req, res) {
+async function deactivateCustomerHandler(req, res, writeService) {
 	try {
 		const { user_Id } = req.params;
 
@@ -70,8 +47,9 @@ async function deactivateCustomerHandler(req, res) {
 			return res.status(400).json({ error: "User ID required" });
 		}
 
-		const result = await deactivateCustomer(user_Id);
-		return res.json({ message: "Customer deactivated", result });
+		UserValidator.validateUserId(user_Id);
+		const response = await writeService.deactivate(user_Id);
+		return res.status(response.status).json({ message: "Customer deactivated", ...response.data });
 	} catch (err) {
 		console.error("Error deactivating customer:", err.message || err);
 		return res.status(500).json({ error: err.message || "Failed to deactivate customer" });
@@ -79,10 +57,10 @@ async function deactivateCustomerHandler(req, res) {
 }
 
 // Get all customers
-async function fetchAllCustomers(req, res) {
+async function fetchAllCustomers(req, res, readService) {
 	try {
-		const customers = await getAllCustomers();
-		return res.json({ customers });
+		const response = await readService.getAll();
+		return res.status(response.status).json(response.data);
 	} catch (err) {
 		console.error("Error fetching all customers:", err.message || err);
 		return res.status(500).json({ error: err.message || "Failed to fetch customers" });
@@ -90,10 +68,10 @@ async function fetchAllCustomers(req, res) {
 }
 
 // Get all active customers
-async function fetchAllActiveCustomers(req, res) {
+async function fetchAllActiveCustomers(req, res, readService) {
 	try {
-		const customers = await getAllActiveCustomers();
-		return res.json({ customers });
+		const response = await readService.getAllActive();
+		return res.status(response.status).json(response.data);
 	} catch (err) {
 		console.error("Error fetching active customers:", err.message || err);
 		return res.status(500).json({ error: err.message || "Failed to fetch active customers" });
@@ -101,7 +79,7 @@ async function fetchAllActiveCustomers(req, res) {
 }
 
 // Get active customer by ID
-async function fetchActiveCustomer(req, res) {
+async function fetchActiveCustomer(req, res, readService) {
 	try {
 		const { user_Id } = req.params;
 
@@ -109,13 +87,8 @@ async function fetchActiveCustomer(req, res) {
 			return res.status(400).json({ error: "User ID required" });
 		}
 
-		const customer = await getActiveCustomer(user_Id);
-
-		if (!customer) {
-			return res.status(404).json({ error: "Customer not found" });
-		}
-
-		return res.json({ customer });
+		const response = await readService.getActive(user_Id);
+		return res.status(response.status).json(response.data);
 	} catch (err) {
 		console.error("Error fetching active customer:", err.message || err);
 		return res.status(500).json({ error: err.message || "Failed to fetch customer" });

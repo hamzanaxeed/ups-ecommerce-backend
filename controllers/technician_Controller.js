@@ -1,42 +1,23 @@
-const {
-	createTechnician,
-	deactivateTechnician,
-	editActiveTechnician,
-	getActiveTechnician,
-	getAllActiveTechnicians,
-	getAllTechnicians,
-} = require("../models/technician_Model");
+const TechnicianValidator = require("../validators/technicianValidator");
 
 // Create technician
-async function registerTechnician(req, res) {
+async function registerTechnician(req, res, writeService) {
 	try {
 		const { name, email, username, password, phone_Number } = req.body;
 
-		if (!name || !email || !username || !password || !phone_Number) {
-			return res.status(400).json({ error: "All fields are required" });
-		}
+		TechnicianValidator.validateTechnicianData({ name, email, username, password, phone_Number });
 
-		const technician = await createTechnician({
-			name,
-			email,
-			username,
-			password,
-			phone_Number,
-		});
-
-		if (technician.error) {
-			return res.status(400).json({ error: technician.error });
-		}
-
-		return res.status(201).json({ message: "Technician created", technician });
+		const response = await writeService.create(req.body);
+	
+		return res.status(response.status).json(response.data);
 	} catch (err) {
 		console.error("Error creating technician:", err.message || err);
-		return res.status(500).json({ error: "Failed to create technician" });
+		return res.status(500).json({ error: err.message || "Failed to create technician" });
 	}
 }
 
 // Deactivate technician
-async function deactivateTechnicianHandler(req, res) {
+async function deactivateTechnicianHandler(req, res, writeService) {
 	try {
 		const { user_Id } = req.params;
 
@@ -44,50 +25,36 @@ async function deactivateTechnicianHandler(req, res) {
 			return res.status(400).json({ error: "User ID required" });
 		}
 
-		const result = await deactivateTechnician(user_Id);
-
-		if (result.error) {
-			return res.status(400).json({ error: result.error });
-		}
-
-		return res.json({ message: "Technician deactivated", result });
+		const response = await writeService.deactivate(user_Id);
+		return res.status(response.status).json({ message: "Technician deactivated", ...response.data });
 	} catch (err) {
 		console.error("Error deactivating technician:", err.message || err);
-		return res.status(500).json({ error: "Failed to deactivate technician" });
+		return res.status(500).json({ error: err.message || "Failed to deactivate technician" });
 	}
 }
 
 // Edit active technician
-async function updateTechnician(req, res) {
+async function updateTechnician(req, res, writeService) {
 	try {
 		const { user_Id } = req.params;
-		const { name, email, username, phone_Number } = req.body;
+		const { name, email, username, phone_Number, password } = req.body;
 
 		if (!user_Id) {
 			return res.status(400).json({ error: "User ID required" });
 		}
 
-		const result = await editActiveTechnician({
-			user_Id,
-			name,
-			email,
-			username,
-			phone_Number,
-		});
+		TechnicianValidator.validateTechnicianData({ name, email, username, password, phone_Number }, { allowPassword: true });
 
-		if (result.error) {
-			return res.status(400).json({ error: result.error });
-		}
-
-		return res.json({ message: "Technician updated", technician: result });
+		const response = await writeService.update(user_Id, req.body);
+		return res.status(response.status).json(response.data);
 	} catch (err) {
 		console.error("Error updating technician:", err.message || err);
-		return res.status(500).json({ error: "Failed to update technician" });
+		return res.status(500).json({ error: err.message || "Failed to update technician" });
 	}
 }
 
 // Get active technician by ID
-async function fetchActiveTechnician(req, res) {
+async function fetchActiveTechnician(req, res, readService) {
 	try {
 		const { user_Id } = req.params;
 
@@ -95,52 +62,33 @@ async function fetchActiveTechnician(req, res) {
 			return res.status(400).json({ error: "User ID required" });
 		}
 
-		const technician = await getActiveTechnician(user_Id);
-
-		if (technician.error) {
-			return res.status(404).json({ error: technician.error });
-		}
-
-		if (!technician) {
-			return res.status(404).json({ error: "Technician not found" });
-		}
-
-		return res.json({ technician });
+		const response = await readService.getActive(user_Id);
+		return res.status(response.status).json(response.data);
 	} catch (err) {
 		console.error("Error fetching technician:", err.message || err);
-		return res.status(500).json({ error: "Failed to fetch technician" });
+		return res.status(500).json({ error: err.message || "Failed to fetch technician" });
 	}
 }
 
 // Get all active technicians
-async function fetchAllActiveTechnicians(req, res) {
+async function fetchAllActiveTechnicians(req, res, readService) {
 	try {
-		const technicians = await getAllActiveTechnicians();
-
-		if (technicians.error) {
-			return res.status(400).json({ error: technicians.error });
-		}
-
-		return res.json({ technicians });
+		const response = await readService.getAllActive();
+		return res.status(response.status).json(response.data);
 	} catch (err) {
 		console.error("Error fetching all active technicians:", err.message || err);
-		return res.status(500).json({ error: "Failed to fetch active technicians" });
+		return res.status(500).json({ error: err.message || "Failed to fetch active technicians" });
 	}
 }
 
 // Get all technicians
-async function fetchAllTechnicians(req, res) {
+async function fetchAllTechnicians(req, res, readService) {
 	try {
-		const technicians = await getAllTechnicians();
-
-		if (technicians.error) {
-			return res.status(400).json({ error: technicians.error });
-		}
-
-		return res.json({ technicians });
+		const response = await readService.getAll();
+		return res.status(response.status).json(response.data);
 	} catch (err) {
 		console.error("Error fetching all technicians:", err.message || err);
-		return res.status(500).json({ error: "Failed to fetch technicians" });
+		return res.status(500).json({ error: err.message || "Failed to fetch technicians" });
 	}
 }
 

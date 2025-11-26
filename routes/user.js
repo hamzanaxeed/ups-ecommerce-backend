@@ -9,22 +9,47 @@ const {
 	fetchActiveCustomer,
 } = require("../controllers/user_Controller");
 
+const {
+	AddUserRepository,
+	EditUserRepository,
+	DeactivateUserRepository,
+	GetActiveUserRepository,
+	GetAllActiveUsersRepository,
+	GetAllUsersRepository,
+} = require("../repositories/user_Operations");
+
+const UserReadService = require("../services/user_Read_Service");
+const UserWriteService = require("../services/user_Write_Service");
+const UserValidator = require("../validators/userValidator");
+
+// Repositories
+const addRepo = new AddUserRepository();
+const editRepo = new EditUserRepository();
+const deactivateRepo = new DeactivateUserRepository();
+const getActiveRepo = new GetActiveUserRepository();
+const getAllActiveRepo = new GetAllActiveUsersRepository();
+const getAllRepo = new GetAllUsersRepository();
+
+// Services
+const readService = new UserReadService(getActiveRepo, getAllRepo, getAllActiveRepo, UserValidator);
+const writeService = new UserWriteService({ addRepo, editRepo, deactivateRepo }, UserValidator);
+
 // POST /api/customer/register -> create new customer
-router.post("/register", registerCustomer);
+router.post("/register", (req, res) => registerCustomer(req, res, writeService));
 
 // GET /api/customer -> get all customers
-router.get("/", fetchAllCustomers);
+router.get("/", (req, res) => fetchAllCustomers(req, res, readService));
 
 // GET /api/customer/active -> get all active customers
-router.get("/active", fetchAllActiveCustomers);
+router.get("/active", (req, res) => fetchAllActiveCustomers(req, res, readService));
 
 // GET /api/customer/active/:user_Id -> get active customer by ID
-router.get("/active/:user_Id", fetchActiveCustomer);
+router.get("/active/:user_Id", (req, res) => fetchActiveCustomer(req, res, readService));
 
 // PUT /api/customer/:user_Id -> update customer
-router.put("/:user_Id", updateCustomer);
+router.put("/:user_Id", (req, res) => updateCustomer(req, res, writeService));
 
 // DELETE /api/customer/:user_Id -> deactivate customer
-router.delete("/:user_Id", deactivateCustomerHandler);
+router.delete("/:user_Id", (req, res) => deactivateCustomerHandler(req, res, writeService));
 
 module.exports = router;
