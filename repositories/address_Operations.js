@@ -1,8 +1,8 @@
 // src/repositories/addressOperations.js
 const db = require("../core/dbClient");
-const IAddressRepository = require("../interfaces/IAddressRepository");
+const address_Interface = require("../interfaces/address_Interface");
 
-class AddAddressRepository extends IAddressRepository {
+class AddAddressRepository extends address_Interface {
     async execute({ user_id, city, country, detail }) {
         return db.callProcedure("create_address", {
             p_user_id: user_id,
@@ -13,7 +13,7 @@ class AddAddressRepository extends IAddressRepository {
     }
 }
 
-class EditAddressRepository extends IAddressRepository {
+class EditAddressRepository extends address_Interface {
     async execute(addressId, { city, country, detail }) {
         return db.callProcedure("edit_address", {
             p_address_id: Number(addressId),
@@ -24,19 +24,19 @@ class EditAddressRepository extends IAddressRepository {
     }
 }
 
-class DeleteAddressRepository extends IAddressRepository {
+class DeleteAddressRepository extends address_Interface {
     async execute(addressId) {
         return db.callProcedure("delete_address", { p_address_id: Number(addressId) });
     }
 }
 
-class DeactivateAddressRepository extends IAddressRepository {
+class DeactivateAddressRepository extends address_Interface {
     async execute(addressId) {
         return db.callProcedure("deactivate_address", { p_address_id: Number(addressId) });
     }
 }
 
-class GetAddressesRepository extends IAddressRepository {
+class GetAddressesRepository extends address_Interface {
     async execute(userId) {
         return db.callProcedure("get_addresses", { p_user_id: userId });
     }

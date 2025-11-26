@@ -16,10 +16,10 @@ const {
     DeleteAddressRepository,
     DeactivateAddressRepository,
     GetAddressesRepository
-} = require("../repositories/addressOperations");
+} = require("../repositories/address_Operations");
 
-const AddressReadService = require("../services/addressReadService");
-const AddressWriteService = require("../services/addressWriteService");
+const AddressReadService = require("../services/address_Read_Service");
+const AddressWriteService = require("../services/address_Write_Service");
 const AddressValidator = require("../validators/addressValidator");
 
 // Repositories

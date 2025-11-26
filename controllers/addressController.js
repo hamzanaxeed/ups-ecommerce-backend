@@ -41,7 +41,7 @@ const removeAddress = async (req, res, writeService) => {
 const deactivateAddressHandler = async (req, res, writeService) => {
     try {
         const response = await writeService.deactivate(req.params.addressId);
-        res.status(response.status).json(response.data);
+        res.status(response.status).json({message: "Address deactivated", ...response.data});
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
