@@ -9,7 +9,7 @@ const {
     createService,
     modifyService,
     removeService
-} = require("../controllers/serviceController");
+} = require("../controllers/service_Controller");
 
 const {
     CreateServiceRepository,
@@ -18,10 +18,10 @@ const {
     GetAllServicesRepository,
     GetServiceByIdRepository,
     GetAvailableServicesRepository
-} = require("../repositories/serviceRepository");
+} = require("../repositories/service_Operations");
 
-const ServiceReadService = require("../services/serviceReadService");
-const ServiceWriteService = require("../services/serviceWriteService");
+const ServiceReadService = require("../services/service_Read_Service");
+const ServiceWriteService = require("../services/service_Write_Service");
 
 // Initialize Repositories
 const createRepo = new CreateServiceRepository();

@@ -1,6 +1,6 @@
 // src/repositories/serviceRepository.js
 const supabase = require("../db/supabaseClient");
-const IServiceRepository = require("../interfaces/IServiceRepository");
+const IServiceRepository = require("../interfaces/service_Interface");
 
 // CREATE
 class CreateServiceRepository extends IServiceRepository {
