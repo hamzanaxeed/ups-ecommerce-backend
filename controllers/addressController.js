@@ -1,44 +1,56 @@
-// controllers/authController.js
-const AuthReadService = require("../services/authReadService");
-const AuthWriteService = require("../services/authWriteService");
+// src/controllers/addressController.js
+const AddressValidator = require("../validators/addressValidator");
 
-const readService = new AuthReadService();
-const writeService = new AuthWriteService();
+const fetchAddresses = async (req, res, readService) => {
+    try {
+        const userId = req.params.userId;
+        const response = await readService.getAll(userId);
+        res.status(response.status).json(response.data);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
 
-async function loginCustomer(req, res) {
-  const result = await readService.loginCustomer(req.body);
-  if (result.error) return res.status(400).json(result);
-  res.json(result);
-}
+const createAddressHandler = async (req, res, writeService) => {
+    try {
+        const response = await writeService.create(req.body);
+        res.status(response.status).json(response.data);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
 
-async function loginTechnician(req, res) {
-  const result = await readService.loginTechnician(req.body);
-  if (result.error) return res.status(400).json(result);
-  res.json(result);
-}
+const updateAddress = async (req, res, writeService) => {
+    try {
+        const response = await writeService.update(req.params.addressId, req.body);
+        res.status(response.status).json(response.data);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
 
-async function loginAdmin(req, res) {
-  const result = await readService.loginAdmin(req.body);
-  if (result.error) return res.status(400).json(result);
-  res.json(result);
-}
+const removeAddress = async (req, res, writeService) => {
+    try {
+        const response = await writeService.delete(req.params.addressId);
+        res.status(response.status).json(response.data);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
 
-async function resetPassword(req, res) {
-  const result = await writeService.resetPassword(req.body);
-  if (result.error) return res.status(400).json(result);
-  res.json(result);
-}
-
-async function changePassword(req, res) {
-  const result = await writeService.changePassword(req.body);
-  if (result.error) return res.status(400).json(result);
-  res.json(result);
-}
+const deactivateAddressHandler = async (req, res, writeService) => {
+    try {
+        const response = await writeService.deactivate(req.params.addressId);
+        res.status(response.status).json(response.data);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
 
 module.exports = {
-  loginCustomer,
-  loginTechnician,
-  loginAdmin,
-  resetPassword,
-  changePassword,
+    fetchAddresses,
+    createAddressHandler,
+    updateAddress,
+    removeAddress,
+    deactivateAddressHandler
 };
