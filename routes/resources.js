@@ -1,30 +1,46 @@
 const express = require("express");
 const router = express.Router();
+
 const {
-	fetchResourcesForCustomers,
-	fetchResourcesForTechnicians,
-	fetchAllResources,
-	removeResource,
-	updateResource,
-	createResourceHandler,
-} = require("../controllers/resources_Controller");
+    fetchResourcesForCustomers,
+    fetchResourcesForTechnicians,
+    fetchAllResources,
+    createResourceHandler,
+    updateResource,
+    removeResource
+} = require("../controllers/resourceController");
 
-// GET /api/resources/customers -> get resources for customers
-router.get("/customers", fetchResourcesForCustomers);
+const {
+    GetResourcesForCustomersRepository,
+    GetResourcesForTechniciansRepository,
+    GetAllResourcesRepository,
+    CreateResourceRepository,
+    EditResourceRepository,
+    DeleteResourceRepository
+} = require("../repositories/resourceOperations");
 
-// GET /api/resources/technicians -> get resources for technicians
-router.get("/technicians", fetchResourcesForTechnicians);
+const ResourceReadService = require("../services/resourceReadService");
+const ResourceWriteService = require("../services/resourceWriteService");
 
-// GET /api/resources/all -> get all resources (admin)
-router.get("/all", fetchAllResources);
+// Repositories
+const customerRepo = new GetResourcesForCustomersRepository();
+const technicianRepo = new GetResourcesForTechniciansRepository();
+const allRepo = new GetAllResourcesRepository();
+const createRepo = new CreateResourceRepository();
+const editRepo = new EditResourceRepository();
+const deleteRepo = new DeleteResourceRepository();
 
-// POST /api/resources -> create resource
-router.post("/", createResourceHandler);
+// Services
+const readService = new ResourceReadService({ customerRepo, technicianRepo, allRepo });
+const writeService = new ResourceWriteService({ createRepo, editRepo, deleteRepo });
 
-// PUT /api/resources/:resource_id -> update resource
-router.put("/:resource_id", updateResource);
+// Routes
+router.get("/customers", (req, res) => fetchResourcesForCustomers(req, res, readService));
+router.get("/technicians", (req, res) => fetchResourcesForTechnicians(req, res, readService));
+router.get("/all", (req, res) => fetchAllResources(req, res, readService));
 
-// DELETE /api/resources/:resource_id -> delete resource
-router.delete("/:resource_id", removeResource);
+router.post("/", (req, res) => createResourceHandler(req, res, writeService));
+router.put("/:resource_id", (req, res) => updateResource(req, res, writeService));
+router.delete("/:resource_id", (req, res) => removeResource(req, res, writeService));
 
 module.exports = router;
