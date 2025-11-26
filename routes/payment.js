@@ -1,26 +1,42 @@
 const express = require("express");
 const router = express.Router();
+
 const {
-  fetchAllPayments,
-  fetchPaymentsByOrder,
-  addPayment,
-  updateStatus,
-  removePayment,
-} = require("../controllers/payment_Controller");
+    fetchAllPayments,
+    fetchPaymentsByOrder,
+    createPaymentHandler,
+    updatePaymentStatusHandler,
+    removePaymentHandler
+} = require("../controllers/paymentController");
 
-// GET /api/payments -> returns all payments (Admin)
-router.get("/", fetchAllPayments);
+const {
+    GetAllPaymentsRepository,
+    GetPaymentsByOrderRepository,
+    AddPaymentRepository,
+    UpdatePaymentStatusRepository,
+    DeletePaymentRepository
+} = require("../repositories/paymentOperations");
 
-// POST /api/payments -> creates a new payment
-router.post("/", addPayment);
+const PaymentValidator = require("../validators/paymentValidator");
+const PaymentReadService = require("../services/paymentReadService");
+const PaymentWriteService = require("../services/paymentWriteService");
 
-// GET /api/payments/order/:orderId -> returns payments for a specific order
-router.get("/order/:orderId", fetchPaymentsByOrder);
+// Repositories
+const getAllRepo = new GetAllPaymentsRepository();
+const getByOrderRepo = new GetPaymentsByOrderRepository();
+const addRepo = new AddPaymentRepository();
+const updateStatusRepo = new UpdatePaymentStatusRepository();
+const deleteRepo = new DeletePaymentRepository();
 
-// PUT /api/payments/:id/status -> updates payment status
-router.put("/:id/status", updateStatus);
+// Services
+const readService = new PaymentReadService({ getAllRepo, getByOrderRepo }, PaymentValidator);
+const writeService = new PaymentWriteService({ addRepo, updateStatusRepo, deleteRepo }, PaymentValidator);
 
-// DELETE /api/payments/:id -> deletes payment
-router.delete("/:id", removePayment);
+// Routes
+router.get("/", (req, res) => fetchAllPayments(req, res, readService));
+router.get("/order/:orderId", (req, res) => fetchPaymentsByOrder(req, res, readService));
+router.post("/", (req, res) => createPaymentHandler(req, res, writeService));
+router.put("/:id/status", (req, res) => updatePaymentStatusHandler(req, res, writeService));
+router.delete("/:id", (req, res) => removePaymentHandler(req, res, writeService));
 
 module.exports = router;
