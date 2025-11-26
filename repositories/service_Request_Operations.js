@@ -1,5 +1,5 @@
 const supabase = require("../db/supabaseClient");
-const IServiceRequestRepository = require("../interfaces/IServiceRequestRepository");
+const IServiceRequestRepository = require("../interfaces/service_Request_interface");
 
 class CreateRequestRepository extends IServiceRequestRepository {
     async execute({ user_Id, slot_id, request_date, service_id, description }) {

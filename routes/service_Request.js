@@ -10,7 +10,7 @@ const {
     assignTechnicianToRequest,
     declineServiceRequest,
     completeServiceRequest
-} = require("../controllers/serviceRequestController");
+} = require("../controllers/service_Request_Controller");
 
 const {
     CreateRequestRepository,
@@ -22,10 +22,10 @@ const {
     GetAllRequestsRepository,
     GetRequestsByUserRepository,
     GetRequestsByTechnicianRepository
-} = require("../repositories/serviceRequestRepository");
+} = require("../repositories/service_Request_Operations");
 
-const ServiceRequestReadService = require("../services/serviceRequestReadService");
-const ServiceRequestWriteService = require("../services/serviceRequestWriteService");
+const ServiceRequestReadService = require("../services/service_Request_Read_Service");
+const ServiceRequestWriteService = require("../services/service_Request_Write_Service");
 
 // Repositories
 const createRepo = new CreateRequestRepository();
