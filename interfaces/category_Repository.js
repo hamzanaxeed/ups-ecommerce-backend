@@ -1,5 +1,5 @@
-class IFeedbackRepository {
+class ICategoryRepository {
     async execute() { throw new Error("Method must be implemented"); }
 }
 
-module.exports = IFeedbackRepository;
+module.exports = ICategoryRepository;

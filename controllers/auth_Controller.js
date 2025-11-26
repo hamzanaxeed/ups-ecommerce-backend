@@ -1,11 +1,4 @@
-// controllers/authController.js
-const AuthReadService = require("../services/authReadService");
-const AuthWriteService = require("../services/authWriteService");
-
-const readService = new AuthReadService();
-const writeService = new AuthWriteService();
-
-async function loginCustomer(req, res) {
+async function loginCustomer(req, res, readService) {
   try {
     const result = await readService.loginCustomer(req.body);
     if (result.error) return res.status(400).json(result);
@@ -15,7 +8,7 @@ async function loginCustomer(req, res) {
   }
 }
 
-async function loginTechnician(req, res) {
+async function loginTechnician(req, res, readService) {
   try {
     const result = await readService.loginTechnician(req.body);
     if (result.error) return res.status(400).json(result);
@@ -25,7 +18,7 @@ async function loginTechnician(req, res) {
   }
 }
 
-async function loginAdmin(req, res) {
+async function loginAdmin(req, res, readService) {
   try {
     const result = await readService.loginAdmin(req.body);
     if (result.error) return res.status(400).json(result);
@@ -35,7 +28,7 @@ async function loginAdmin(req, res) {
   }
 }
 
-async function resetPassword(req, res) {
+async function resetPassword(req, res, writeService) {
   try {
     const result = await writeService.resetPassword(req.body);
     if (result.error) return res.status(400).json(result);
@@ -45,7 +38,7 @@ async function resetPassword(req, res) {
   }
 }
 
-async function changePassword(req, res) {
+async function changePassword(req, res, writeService) {
   try {
     const result = await writeService.changePassword(req.body);
     if (result.error) return res.status(400).json(result);

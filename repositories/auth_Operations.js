@@ -1,9 +1,8 @@
-// repositories/authRepository.js
-const IAuthRepository = require("../interfaces/IAuthRepository");
 const supabase = require("../db/supabaseClient");
+const IAuthRepository = require("../interfaces/auth_Interface");
 
-class AuthRepository extends IAuthRepository {
-  async findActiveUserByEmailAndRole(email, role) {
+class FindActiveUserByEmailAndRoleRepository extends IAuthRepository {
+  async execute({ email, role }) {
     const { data, error } = await supabase
       .from("users")
       .select("*")
@@ -15,8 +14,10 @@ class AuthRepository extends IAuthRepository {
     if (error) throw error;
     return data;
   }
+}
 
-  async findUserByEmail(email) {
+class FindUserByEmailRepository extends IAuthRepository {
+  async execute({ email }) {
     const { data, error } = await supabase
       .from("users")
       .select("*")
@@ -25,8 +26,10 @@ class AuthRepository extends IAuthRepository {
     if (error) throw error;
     return data;
   }
+}
 
-  async updatePasswordByEmail(email, password_hash) {
+class UpdatePasswordByEmailRepository extends IAuthRepository {
+  async execute({ email, password_hash }) {
     const { data, error } = await supabase
       .from("users")
       .update({ password_hash })
@@ -37,8 +40,10 @@ class AuthRepository extends IAuthRepository {
     if (error) throw error;
     return data;
   }
+}
 
-  async updateUserPassword(email, password_hash) {
+class UpdateUserPasswordRepository extends IAuthRepository {
+  async execute({ email, password_hash }) {
     const { data, error } = await supabase
       .from("users")
       .update({ password_hash })
@@ -50,4 +55,9 @@ class AuthRepository extends IAuthRepository {
   }
 }
 
-module.exports = AuthRepository;
+module.exports = {
+  FindActiveUserByEmailAndRoleRepository,
+  FindUserByEmailRepository,
+  UpdatePasswordByEmailRepository,
+  UpdateUserPasswordRepository,
+};

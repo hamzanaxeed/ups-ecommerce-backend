@@ -1,5 +1,5 @@
 // src/controllers/addressController.js
-const AddressValidator = require("../validators/addressValidator");
+const AddressValidator = require("../validators/address_Validator");
 
 const fetchAddresses = async (req, res, readService) => {
     try {

@@ -8,7 +8,7 @@ const {
     updateAddress,
     removeAddress,
     deactivateAddressHandler
-} = require("../controllers/addressController");
+} = require("../controllers/address_Controller");
 
 const {
     AddAddressRepository,
@@ -20,7 +20,7 @@ const {
 
 const AddressReadService = require("../services/address_Read_Service");
 const AddressWriteService = require("../services/address_Write_Service");
-const AddressValidator = require("../validators/addressValidator");
+const AddressValidator = require("../validators/address_Validator");
 
 // Repositories
 const getRepo = new GetAddressesRepository();

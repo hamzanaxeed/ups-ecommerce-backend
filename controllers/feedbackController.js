@@ -1,22 +1,20 @@
-const FeedbackService = require("../services/FeedbackService");
-const service = new FeedbackService();
-
-async function fetchAllFeedback(req, res) {
+// Controller accepts a FeedbackService instance via DI
+async function fetchAllFeedback(req, res, service) {
     const response = await service.getAll();
     res.status(response.status).json(response.data);
 }
 
-async function fetchFeedbackByCustomer(req, res) {
+async function fetchFeedbackByCustomer(req, res, service) {
     const response = await service.getByCustomer(req.params.customerId);
     res.status(response.status).json(response.data);
 }
 
-async function fetchFeedbackForOrder(req, res) {
+async function fetchFeedbackForOrder(req, res, service) {
     const response = await service.getByOrder(req.params.orderId);
     res.status(response.status).json(response.data);
 }
 
-async function addFeedback(req, res) {
+async function addFeedback(req, res, service) {
     const customerId = String(req.body.customer_id).trim();
     console.log("Received Customer ID:", customerId);
 
@@ -32,7 +30,7 @@ async function addFeedback(req, res) {
     res.status(response.status).json(response.data);
 }
 
-async function removeFeedback(req, res) {
+async function removeFeedback(req, res, service) {
     const response = await service.delete(req.params.id);
     res.status(response.status).json(response.data);
 }
