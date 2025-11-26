@@ -1,6 +1,6 @@
 // src/repositories/slotRepository.js
 const supabase = require("../db/supabaseClient");
-const ISlotRepository = require("../interfaces/ISlotRepository");
+const ISlotRepository = require("../interfaces/slot_Interface");
 
 // CREATE
 class CreateSlotRepository extends ISlotRepository {

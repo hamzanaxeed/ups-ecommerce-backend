@@ -7,17 +7,17 @@ const {
     createSlot,
     modifySlot,
     removeSlot
-} = require("../controllers/slotController");
+} = require("../controllers/slot_Controller");
 
 const {
     CreateSlotRepository,
     UpdateSlotRepository,
     DeleteSlotRepository,
     GetAllSlotsRepository
-} = require("../repositories/slotRepository");
+} = require("../repositories/slot_Operations");
 
-const SlotReadService = require("../services/slotReadService");
-const SlotWriteService = require("../services/slotWriteService");
+const SlotReadService = require("../services/slot_Read_Service");
+const SlotWriteService = require("../services/slot_Write_Service");
 
 // Initialize Repositories
 const createRepo = new CreateSlotRepository();
