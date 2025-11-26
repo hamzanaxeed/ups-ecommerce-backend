@@ -1,5 +1,5 @@
 const db = require("../core/dbClient");
-const IFavouriteRepository = require("../interfaces/IFavouriteRepository");
+const IFavouriteRepository = require("../interfaces/favourite_Interface");
 
 class GetFavouritesRepository extends IFavouriteRepository {
     async execute(userId) {

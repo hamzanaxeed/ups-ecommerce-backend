@@ -1,5 +1,5 @@
-const FavouriteRepository = require("../repositories/FavouriteRepository");
-const { validateToggleFavourite } = require("../validators/FavouriteValidator");
+const FavouriteRepository = require("../repositories/favourite_Operations");
+const { validateToggleFavourite } = require("../validators/favourite_Validator");
 
 class FavouriteService {
     constructor(repos = { getAllRepo: new FavouriteRepository(), toggleRepo: null }) {
