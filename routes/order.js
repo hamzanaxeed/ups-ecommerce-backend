@@ -1,46 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const {
-  fetchAllOrders,
-  fetchOrderById,
-  fetchFullOrderDetail,
-  createOrder,
-  fetchCustomerOrders,
-  updateStatus,
-  removeOrder,
-  fetchOrderSummary,
-  completeOrder,
-  confirmOrder,
-} = require("../controllers/order_Controller");
+const orderController = require("../controllers/orderController");
 
-// GET /api/orders -> returns all orders (Admin)
-router.get("/", fetchAllOrders);
-
-// GET /api/orders/summary -> returns order summary report
-router.get("/summary", fetchOrderSummary);
-
-// POST /api/orders -> creates a new order
-router.post("/", createOrder);
-
-// GET /api/orders/customer/:customerId -> returns orders for a specific customer
-router.get("/customer/:customerId", fetchCustomerOrders);
-
-// GET /api/orders/:id -> returns order by id
-router.get("/:id", fetchOrderById);
-
-// GET /api/orders/:id/detail -> returns full order detail (products, categories)
-router.get("/:id/detail", fetchFullOrderDetail);
-
-// PUT /api/orders/:id/status -> updates order status
-router.put("/:id/status", updateStatus);
-
-// PUT /api/orders/:id/complete -> marks order as completed
-router.put("/:id/complete", completeOrder);
-
-// PUT /api/orders/:id/confirm -> marks order as confirmed
-router.put("/:id/confirm", confirmOrder);
-
-// DELETE /api/orders/:id -> deletes order
-router.delete("/:id", removeOrder);
+router.get("/", orderController.fetchAllOrders);
+router.get("/summary", orderController.fetchOrderSummary);
+router.post("/", orderController.createOrder);
+router.get("/customer/:customerId", orderController.fetchCustomerOrders);
+router.get("/:id", orderController.fetchOrderById);
+router.get("/:id/detail", orderController.fetchFullOrderDetail);
+router.put("/:id/status", orderController.updateStatus);
+router.put("/:id/complete", orderController.completeOrder);
+router.put("/:id/confirm", orderController.confirmOrder);
+router.delete("/:id", orderController.removeOrder);
 
 module.exports = router;
