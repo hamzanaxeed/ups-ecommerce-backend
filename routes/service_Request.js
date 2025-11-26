@@ -1,42 +1,58 @@
 const express = require("express");
 const router = express.Router();
 const {
-	createServiceRequest,
-	updateServiceRequest,
-	removeServiceRequest,
-	assignTechnicianToRequest,
-	declineServiceRequest,
-	completeServiceRequest,
-	fetchAllRequests,
-	fetchRequestsByUser,
-	fetchRequestsByTechnician,
-} = require("../controllers/service_Request_Controller");
+    fetchAllRequests,
+    fetchRequestsByUser,
+    fetchRequestsByTechnician,
+    createServiceRequest,
+    updateServiceRequest,
+    removeServiceRequest,
+    assignTechnicianToRequest,
+    declineServiceRequest,
+    completeServiceRequest
+} = require("../controllers/serviceRequestController");
 
-// GET /api/service-requests -> get all requests
-router.get("/", fetchAllRequests);
+const {
+    CreateRequestRepository,
+    EditRequestRepository,
+    DeleteRequestRepository,
+    AssignTechnicianRepository,
+    DeclineRequestRepository,
+    CompleteRequestRepository,
+    GetAllRequestsRepository,
+    GetRequestsByUserRepository,
+    GetRequestsByTechnicianRepository
+} = require("../repositories/serviceRequestRepository");
 
-// POST /api/service-requests -> create request
-router.post("/", createServiceRequest);
+const ServiceRequestReadService = require("../services/serviceRequestReadService");
+const ServiceRequestWriteService = require("../services/serviceRequestWriteService");
 
-// GET /api/service-requests/user/:user_Id -> get requests by user
-router.get("/user/:user_Id", fetchRequestsByUser);
+// Repositories
+const createRepo = new CreateRequestRepository();
+const editRepo = new EditRequestRepository();
+const deleteRepo = new DeleteRequestRepository();
+const assignRepo = new AssignTechnicianRepository();
+const declineRepo = new DeclineRequestRepository();
+const completeRepo = new CompleteRequestRepository();
+const allRepo = new GetAllRequestsRepository();
+const userRepo = new GetRequestsByUserRepository();
+const technicianRepo = new GetRequestsByTechnicianRepository();
 
-// GET /api/service-requests/technician/:technician_id -> get requests by technician
-router.get("/technician/:technician_id", fetchRequestsByTechnician);
+// Services
+const readService = new ServiceRequestReadService({ allRepo, userRepo, technicianRepo });
+const writeService = new ServiceRequestWriteService({ createRepo, editRepo, deleteRepo, assignRepo, declineRepo, completeRepo });
 
-// PUT /api/service-requests/:request_id -> update request
-router.put("/:request_id", updateServiceRequest);
+// Routes
+router.get("/", (req, res) => fetchAllRequests(req, res, readService));
+router.get("/user/:user_Id", (req, res) => fetchRequestsByUser(req, res, readService));
+router.get("/technician/:technician_id", (req, res) => fetchRequestsByTechnician(req, res, readService));
 
-// DELETE /api/service-requests/:request_id -> delete request
-router.delete("/:request_id", removeServiceRequest);
+router.post("/", (req, res) => createServiceRequest(req, res, writeService));
+router.put("/:request_id", (req, res) => updateServiceRequest(req, res, writeService));
+router.delete("/:request_id", (req, res) => removeServiceRequest(req, res, writeService));
 
-// PATCH /api/service-requests/:request_id/assign -> assign technician
-router.patch("/:request_id/assign", assignTechnicianToRequest);
-
-// PATCH /api/service-requests/:request_id/decline -> decline request
-router.patch("/:request_id/decline", declineServiceRequest);
-
-// PATCH /api/service-requests/:request_id/complete -> complete request
-router.patch("/:request_id/complete", completeServiceRequest);
+router.patch("/:request_id/assign", (req, res) => assignTechnicianToRequest(req, res, writeService));
+router.patch("/:request_id/decline", (req, res) => declineServiceRequest(req, res, writeService));
+router.patch("/:request_id/complete", (req, res) => completeServiceRequest(req, res, writeService));
 
 module.exports = router;
