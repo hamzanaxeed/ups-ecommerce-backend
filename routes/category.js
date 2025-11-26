@@ -7,7 +7,7 @@ const {
 	CreateCategoryRepository,
 	UpdateCategoryRepository,
 	DeleteCategoryRepository,
-} = require("../repositories/categoryOperations");
+} = require("../repositories/category_Operations");
 const CategoryService = require("../services/category_Service");
 
 const getAllRepo = new GetAllCategoriesRepository();

@@ -1,4 +1,4 @@
-const CategoryRepository = require("../repositories/CategoryRepository");
+const CategoryRepository = require("../repositories/category_Operations");
 const { validateCreateCategory, validateUpdateCategory } = require("../validators/category_Validator");
 
 class CategoryService {

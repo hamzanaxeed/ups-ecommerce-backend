@@ -1,5 +1,5 @@
 const db = require("../core/dbClient");
-const ICategoryRepository = require("../interfaces/ICategoryRepository");
+const ICategoryRepository = require("../interfaces/category_Interface");
 
 class GetAllCategoriesRepository extends ICategoryRepository {
     async execute() {
