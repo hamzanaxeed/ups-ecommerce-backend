@@ -7,7 +7,7 @@ const {
     createPaymentHandler,
     updatePaymentStatusHandler,
     removePaymentHandler
-} = require("../controllers/paymentController");
+} = require("../controllers/payment_Controller");
 
 const {
     GetAllPaymentsRepository,
@@ -15,11 +15,11 @@ const {
     AddPaymentRepository,
     UpdatePaymentStatusRepository,
     DeletePaymentRepository
-} = require("../repositories/paymentOperations");
+} = require("../repositories/payment_Operations");
 
-const PaymentValidator = require("../validators/paymentValidator");
-const PaymentReadService = require("../services/paymentReadService");
-const PaymentWriteService = require("../services/paymentWriteService");
+const PaymentValidator = require("../validators/payment_Validator");
+const PaymentReadService = require("../services/payment_Read_Service");
+const PaymentWriteService = require("../services/payment_Write_Service");
 
 // Repositories
 const getAllRepo = new GetAllPaymentsRepository();

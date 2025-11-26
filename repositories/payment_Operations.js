@@ -1,5 +1,5 @@
 const db = require("../core/dbClient");
-const IPaymentRepository = require("../interfaces/IPaymentRepository");
+const IPaymentRepository = require("../interfaces/payment_Interface");
 
 class GetAllPaymentsRepository extends IPaymentRepository {
     async execute() {
