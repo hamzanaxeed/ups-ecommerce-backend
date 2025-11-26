@@ -8,7 +8,7 @@ const {
     createResourceHandler,
     updateResource,
     removeResource
-} = require("../controllers/resourceController");
+} = require("../controllers/resource_Controller");
 
 const {
     GetResourcesForCustomersRepository,
@@ -17,10 +17,10 @@ const {
     CreateResourceRepository,
     EditResourceRepository,
     DeleteResourceRepository
-} = require("../repositories/resourceOperations");
+} = require("../repositories/resource_Operations");
 
-const ResourceReadService = require("../services/resourceReadService");
-const ResourceWriteService = require("../services/resourceWriteService");
+const ResourceReadService = require("../services/resource_Read_Service");
+const ResourceWriteService = require("../services/resource_Write_Service");
 
 // Repositories
 const customerRepo = new GetResourcesForCustomersRepository();

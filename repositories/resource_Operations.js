@@ -1,5 +1,5 @@
 const db = require("../db/supabaseClient");
-const IResourceRepository = require("../interfaces/IResourceRepository");
+const IResourceRepository = require("../interfaces/resource_Interface");
 
 class GetResourcesForCustomersRepository extends IResourceRepository {
     async execute() {
