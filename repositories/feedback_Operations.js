@@ -1,5 +1,5 @@
 const db = require("../core/dbClient");
-const IFeedbackRepository = require("../interfaces/IFeedbackRepository");
+const IFeedbackRepository = require("../interfaces/feedback_Interface");
 
 class GetAllFeedbackRepository extends IFeedbackRepository {
     async execute() {

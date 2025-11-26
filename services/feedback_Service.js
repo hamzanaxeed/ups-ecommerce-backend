@@ -1,5 +1,5 @@
-const FeedbackRepository = require("../repositories/FeedbackRepository");
-const { validateCreateFeedback } = require("../validators/FeedbackValidator");
+const FeedbackRepository = require("../repositories/feedback_Operations");
+const { validateCreateFeedback } = require("../validators/feedback_Validator");
 
 class FeedbackService {
     constructor(repos = { allRepo: new FeedbackRepository(), byCustomerRepo: null, byOrderRepo: null, createRepo: null, deleteRepo: null }) {

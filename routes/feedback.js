@@ -6,15 +6,15 @@ const {
     fetchFeedbackForOrder,
     addFeedback,
     removeFeedback,
-} = require("../controllers/feedbackController");
+} = require("../controllers/feedback_Controller");
 const {
     GetAllFeedbackRepository,
     GetFeedbackByCustomerRepository,
     GetFeedbackByOrderRepository,
     CreateFeedbackRepository,
     DeleteFeedbackRepository,
-} = require("../repositories/feedbackOperations");
-const FeedbackService = require("../services/FeedbackService");
+} = require("../repositories/feedback_Operations");
+const FeedbackService = require("../services/feedback_Service");
 
 const allRepo = new GetAllFeedbackRepository();
 const byCustomerRepo = new GetFeedbackByCustomerRepository();
