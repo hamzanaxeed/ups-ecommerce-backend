@@ -7,7 +7,7 @@ const {
     createProductHandler,
     updateProductHandler,
     removeProductHandler
-} = require("../controllers/productController");
+} = require("../controllers/product_Controller");
 
 const {
     GetAllProductsRepository,
@@ -15,11 +15,11 @@ const {
     AddProductRepository,
     UpdateProductRepository,
     DeleteProductRepository
-} = require("../repositories/productOperations");
+} = require("../repositories/product_Operations");
 
-const ProductValidator = require("../validators/productValidator");
-const ProductReadService = require("../services/productReadService");
-const ProductWriteService = require("../services/productWriteService");
+const ProductValidator = require("../validators/product_Validator");
+const ProductReadService = require("../services/product_Read_Service");
+const ProductWriteService = require("../services/product_Write_Service");
 
 // Repositories
 const getAllRepo = new GetAllProductsRepository();

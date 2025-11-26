@@ -1,5 +1,5 @@
 const db = require("../db/supabaseClient");
-const IProductRepository = require("../interfaces/IProductRepository");
+const IProductRepository = require("../interfaces/product_Interface");
 
 class GetAllProductsRepository extends IProductRepository {
     async execute() {
