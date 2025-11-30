@@ -4,12 +4,14 @@ class UserWriteService {
     #addRepo;
     #editRepo;
     #deactivateRepo;
+    #activateRepo;
     #validator;
 
-    constructor({ addRepo, editRepo, deactivateRepo }, validator) {
+    constructor({ addRepo, editRepo, deactivateRepo, activateRepo }, validator) {
         this.#addRepo = addRepo;
         this.#editRepo = editRepo;
         this.#deactivateRepo = deactivateRepo;
+        this.#activateRepo = activateRepo;
         this.#validator = validator;
     }
 
@@ -45,6 +47,21 @@ class UserWriteService {
         try {
             const data = await this.#deactivateRepo.execute(userId);
             const result = data && data.response ? (Array.isArray(data.response) ? data.response : data.response) : data;
+            return { status: 200, data: { result } };
+        } catch (err) {
+            return { status: 400, data: { error: err.message || err } };
+        }
+    }
+
+    async activate(userId) {
+        // For activation, we should allow activating an inactive user; verify they exist even if inactive
+        this.#validator.validateUserId(userId);
+        const exists = await verifyUserId(userId, { requireActive: false });
+        if (!exists) return { status: 404, data: { error: "User not found" } };
+        try {
+            const data = await this.#activateRepo.execute(userId);
+            const result = data && data.response ? (Array.isArray(data.response) ? data.response : data.response) : data;
+          console.log("Activation result:", result);
             return { status: 200, data: { result } };
         } catch (err) {
             return { status: 400, data: { error: err.message || err } };

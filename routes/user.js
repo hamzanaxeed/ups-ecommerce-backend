@@ -4,6 +4,7 @@ const {
 	registerCustomer,
 	updateCustomer,
 	deactivateCustomerHandler,
+	activateCustomerHandler,
 	fetchAllCustomers,
 	fetchAllActiveCustomers,
 	fetchActiveCustomer,
@@ -13,6 +14,7 @@ const {
 	AddUserRepository,
 	EditUserRepository,
 	DeactivateUserRepository,
+	ActivateUserRepository,
 	GetActiveUserRepository,
 	GetAllActiveUsersRepository,
 	GetAllUsersRepository,
@@ -26,13 +28,14 @@ const UserValidator = require("../validators/userValidator");
 const addRepo = new AddUserRepository();
 const editRepo = new EditUserRepository();
 const deactivateRepo = new DeactivateUserRepository();
+const activateRepo = new ActivateUserRepository();
 const getActiveRepo = new GetActiveUserRepository();
 const getAllActiveRepo = new GetAllActiveUsersRepository();
 const getAllRepo = new GetAllUsersRepository();
 
 // Services
 const readService = new UserReadService(getActiveRepo, getAllRepo, getAllActiveRepo, UserValidator);
-const writeService = new UserWriteService({ addRepo, editRepo, deactivateRepo }, UserValidator);
+const writeService = new UserWriteService({ addRepo, editRepo, deactivateRepo, activateRepo }, UserValidator);
 
 // POST /api/customer/register -> create new customer
 router.post("/register", (req, res) => registerCustomer(req, res, writeService));
@@ -51,5 +54,8 @@ router.put("/:user_Id", (req, res) => updateCustomer(req, res, writeService));
 
 // DELETE /api/customer/:user_Id -> deactivate customer
 router.delete("/:user_Id", (req, res) => deactivateCustomerHandler(req, res, writeService));
+
+// POST /api/customer/activate/:user_Id -> activate customer
+router.post("/activate/:user_Id", (req, res) => activateCustomerHandler(req, res, writeService));
 
 module.exports = router;

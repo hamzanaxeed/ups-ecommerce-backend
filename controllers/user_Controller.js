@@ -56,6 +56,25 @@ async function deactivateCustomerHandler(req, res, writeService) {
 	}
 }
 
+// Activate customer
+async function activateCustomerHandler(req, res, writeService) {
+	try {
+		const { user_Id } = req.params;
+
+		if (!user_Id) {
+			return res.status(400).json({ error: "User ID required" });
+		}
+
+		UserValidator.validateUserId(user_Id);
+		const response = await writeService.activate(user_Id);
+		console.log("Activation response:", response);
+		return res.status(response.status).json({ data: response.data });
+	} catch (err) {
+		console.error("Error activating customer:", err.message || err);
+		return res.status(500).json({ error: err.message || "Failed to activate customer" });
+	}
+}
+
 // Get all customers
 async function fetchAllCustomers(req, res, readService) {
 	try {
@@ -99,6 +118,7 @@ module.exports = {
 	registerCustomer,
 	updateCustomer,
 	deactivateCustomerHandler,
+	activateCustomerHandler,
 	fetchAllCustomers,
 	fetchAllActiveCustomers,
 	fetchActiveCustomer,

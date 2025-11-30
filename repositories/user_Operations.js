@@ -33,6 +33,15 @@ class DeactivateUserRepository extends IUserRepository {
     }
 }
 
+class ActivateUserRepository extends IUserRepository {
+    async execute(user_Id) {
+        console.log("Activating user with ID:", user_Id);
+         const msg = await db.callProcedure("activate_user", { p_user_id: user_Id });
+        
+         return msg;
+    }
+}
+
 class GetActiveUserRepository extends IUserRepository {
     async execute(user_Id) {
         return db.callProcedure("get_active_customer", { p_user_id: user_Id });
@@ -55,6 +64,7 @@ module.exports = {
     AddUserRepository,
     EditUserRepository,
     DeactivateUserRepository,
+    ActivateUserRepository,
     GetActiveUserRepository,
     GetAllActiveUsersRepository,
     GetAllUsersRepository,
