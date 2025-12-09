@@ -4,7 +4,11 @@ const IProductRepository = require("../interfaces/product_Interface");
 class GetAllProductsRepository extends IProductRepository {
     async execute() {
         const { data, error } = await db.rpc("get_all_products");
+        console.log("GetAllProductsRepository - RPC call completed");
+        console.log("Data:", data);
+        console.log("Error:", error);
         if (error) throw error;
+        console.log("Fetched products:", data);
         return data;
     }
 }

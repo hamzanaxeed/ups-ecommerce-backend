@@ -7,6 +7,10 @@ const GLOBAL_KEY = "__SUPABASE_CLIENT_INSTANCE__";
 
 if (!global[GLOBAL_KEY]) {
   const instance = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+  console.log("Supabase URL:", process.env.SUPABASE_URL);
+  console.log("Supabase Key:", process.env.SUPABASE_KEY ? "****" : "Not Set");
+  console.log("Supabase client initialized");
+
   global[GLOBAL_KEY] = instance;
 }
 

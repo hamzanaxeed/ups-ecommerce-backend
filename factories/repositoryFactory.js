@@ -1,15 +1,9 @@
-/**
- * RepositoryFactory (Factory Method)
- * Provides methods to create repository instances for different domains.
- * This centralizes construction and makes it easy to swap implementations (e.g., mocks)
- * by changing a single place.
- */
 
 const userRepos = require("../repositories/user_Operations");
 const techRepos = require("../repositories/technician_Operations");
 
 function createUserRepositories(mode = "default") {
-    // mode reserved for future (e.g., 'mock' -> return in-memory repos)
+    
     const {
         AddUserRepository,
         EditUserRepository,
