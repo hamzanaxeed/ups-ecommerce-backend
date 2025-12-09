@@ -24,14 +24,17 @@ const UserReadService = require("../services/user_Read_Service");
 const UserWriteService = require("../services/user_Write_Service");
 const UserValidator = require("../validators/userValidator");
 
-// Repositories
-const addRepo = new AddUserRepository();
-const editRepo = new EditUserRepository();
-const deactivateRepo = new DeactivateUserRepository();
-const activateRepo = new ActivateUserRepository();
-const getActiveRepo = new GetActiveUserRepository();
-const getAllActiveRepo = new GetAllActiveUsersRepository();
-const getAllRepo = new GetAllUsersRepository();
+// Repositories (factory method)
+const { createUserRepositories } = require("../factories/repositoryFactory");
+const {
+	addRepo,
+	editRepo,
+	deactivateRepo,
+	activateRepo,
+	getActiveRepo,
+	getAllActiveRepo,
+	getAllRepo,
+} = createUserRepositories();
 
 // Services
 const readService = new UserReadService(getActiveRepo, getAllRepo, getAllActiveRepo, UserValidator);

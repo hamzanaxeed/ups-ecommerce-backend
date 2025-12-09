@@ -22,13 +22,9 @@ const TechnicianReadService = require("../services/technician_Read_Service");
 const TechnicianWriteService = require("../services/technician_Write_Service");
 const TechnicianValidator = require("../validators/technicianValidator");
 
-// Repositories
-const addRepo = new AddTechnicianRepository();
-const editRepo = new EditTechnicianRepository();
-const deactivateRepo = new DeactivateTechnicianRepository();
-const getActiveRepo = new GetActiveTechnicianRepository();
-const getAllActiveRepo = new GetAllActiveTechniciansRepository();
-const getAllRepo = new GetAllTechniciansRepository();
+// Repositories (factory method)
+const { createTechnicianRepositories } = require("../factories/repositoryFactory");
+const { addRepo, editRepo, deactivateRepo, getActiveRepo, getAllActiveRepo, getAllRepo } = createTechnicianRepositories();
 
 // Services
 const readService = new TechnicianReadService(getActiveRepo, getAllRepo, getAllActiveRepo, TechnicianValidator);
